@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GtaTestDurations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Executable>C:\Users\user\source\repos\main\Debug\Vector_tests.exe</Executable>
+  <TestDurations>
+    <TestDuration Test="TEST_SIZE.test1" Duration="1" />
+    <TestDuration Test="TEST_ASSIGNMENT.test1" Duration="1" />
+    <TestDuration Test="TEST_PUSH_BACK.test1" Duration="1" />
+    <TestDuration Test="TEST_ERASE.test1" Duration="1" />
+  </TestDurations>
+</GtaTestDurations>
