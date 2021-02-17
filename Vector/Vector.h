@@ -23,8 +23,7 @@ public:
 
 	void erase(std::size_t index);
 
-	std::size_t m_size() const;
-
+	std::size_t _size() const;
 
 	class iterator final
 	{
@@ -39,10 +38,10 @@ public:
 		T& operator*() { return *m_ptr; };
 
 		iterator& operator++() { ++m_ptr; return *this; };       // Prefix
-		iterator operator++(int) { iterator tmp = *this; ++(*this); return tmp; };     // Postfix
+		iterator operator++(int) { auto cur_it = *this; ++(*this); return cur_it; };     // Postfix
 
 		iterator& operator--() { m_ptr--; return *this; };
-		iterator operator--(int) { iterator tmp = *this; --(*this); return tmp; };
+		iterator operator--(int) { auto cur_it = *this; --(*this); return cur_it; };
 
 		bool operator==(const iterator& rhs) const { return m_ptr == rhs.m_ptr; };
 		bool operator!=(const iterator& rhs) const { return m_ptr != rhs.m_ptr; };
@@ -51,29 +50,29 @@ public:
 		T* m_ptr;
 	};
 
-	iterator begin() { return iterator(&data[0]); };
-	iterator end() { return iterator(&data[size]); };
+	iterator begin() { return iterator(data); };
+	iterator end() { return iterator(data + m_size); };
 
 private:
-	std::size_t size{ 0 };
-	std::size_t capacity{ 0 };
+	std::size_t m_size{ 0 };
+	std::size_t m_capacity{ 0 };
 	T* data{ nullptr };
 
 	void enlarge();
-	/*static*/ std::size_t power_of_two_upper_bound(std::size_t index);
+	static std::size_t power_of_two_upper_bound(std::size_t index);
 };
 
 
 template<typename T>
 vector<T>::vector(std::size_t initial_size)
-	: size(initial_size) {
-	capacity = power_of_two_upper_bound(initial_size);
+	: m_size(initial_size) {
+	m_capacity = power_of_two_upper_bound(initial_size);
 	data = new T[initial_size];
 }
 
 template <typename T>
 void vector<T>::assert_index_valid(std::size_t index) const {
-	if (index > capacity - 1) {
+	if (index > m_capacity - 1) {
 		throw std::invalid_argument("This element doesn't exist");
 	}
 }
@@ -104,8 +103,8 @@ T& vector<T>::operator[](std::size_t index){
 
 template<typename T>
 void vector<T>::enlarge(){
-	auto* tempHolder = new T[size + 1];
-	memcpy(tempHolder, data, sizeof(T) * size);
+	auto* tempHolder = new T[m_size + 1];
+	memcpy(tempHolder, data, sizeof(T) * m_size);
 	delete data;
 	data = tempHolder;
 }
@@ -113,8 +112,8 @@ void vector<T>::enlarge(){
 template<typename T>
 void vector<T>::push_back(const T& value){
 	enlarge();
-	data[size] = value;
-	size++;
+	data[m_size] = value;
+	m_size++;
 }
 
 
@@ -123,28 +122,28 @@ template<typename T>
 void vector<T>::erase(std::size_t index){
 	if (data == nullptr) { throw std::invalid_argument("Empty vector!"); }
 
-	auto* tmp = new T[capacity];
-	memcpy(tmp, data, sizeof(T) * (size - index - 1));
-	memcpy(tmp + index, data + index + 1, sizeof(T) * (size - index));
+	auto* tmp = new T[m_capacity];
+	memcpy(tmp, data, sizeof(T) * (m_size - index - 1));
+	memcpy(tmp + index, data + index + 1, sizeof(T) * (m_size - index));
 
 	delete[] data;
 	data = tmp;
 }
 
 template<typename T>
-std::size_t vector<T>::m_size() const{
-	return size;
+std::size_t vector<T>::_size() const{
+	return m_size;
 }
 
 
 template<typename T>
-/*static*/ std::size_t vector<T>::power_of_two_upper_bound(std::size_t index){
+std::size_t vector<T>::power_of_two_upper_bound(std::size_t index){
 	return std::size_t(std::log2f(float(index)) + 0.5f);
 }
 
 template<typename T>
 template<typename ...Args>
 void vector<T>::emplace_back(Args&& ...args){
-	if (capacity == size) { enlarge(); }
-	data[size++] = std::move(T(std::forward<Args>(args)...));
+	if (m_capacity == m_size) enlarge();
+	data[m_size++] = new(data + m_size)T(std::forward(args)...);
 }

@@ -9,7 +9,7 @@
 
 TEST(TEST_SIZE, test1) {
 	vector<int> vec(4);
-	EXPECT_EQ(4, vec.m_size());
+	EXPECT_EQ(4, vec._size());
 }
 
 TEST(TEST_ASSIGNMENT, test1) {
@@ -40,19 +40,27 @@ TEST(TEST_ERASE, test1) {
 TEST(TEST_ITERATOR, test1) {
 	vector<int> myvector;
 	int i = 1;
-	//int i2 = 0;
-	myvector.push_back(1);
-	myvector.push_back(2);
-	myvector.push_back(3);
-	myvector.push_back(4);
-	myvector.push_back(5);
-	myvector.push_back(6);
-
+	for (int j = 1; j <= 6; j++) {
+		myvector.push_back(j);
+	}
+	
 	for (auto it = myvector.begin(); it != myvector.end(); ++it) {
-		//i2 = it*;
 		EXPECT_EQ(i, *it);
 		i++;
 	}
 		
+}
+
+TEST(TEST_ITERATOR, test2) {
+	vector<int> myvector;
+	int i = 1;
+	for (int j = 1; j <= 6; j++) {
+		myvector.push_back(j);
+	}
+
+	for (auto& val : myvector) {
+		EXPECT_EQ(i, val);
+		i++;
+	}
 }
 

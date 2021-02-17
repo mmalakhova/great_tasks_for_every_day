@@ -3,15 +3,14 @@
 
 int main(){
     vector<int> myvector;
-    myvector.push_back(1);
-    myvector.push_back(2);
-    myvector.push_back(3);
-    myvector.push_back(4);
-    myvector.push_back(5);
-    myvector.push_back(6);
-    // vector becomes 1, 2, 3, 4, 5, 6 
+    for (int j = 1; j <= 6; j++) {
+        myvector.push_back(j);
+    }
 
-    // printing the vector 
     for (auto it = myvector.begin(); it != myvector.end(); ++it)
         std::cout << ' ' << *it;
+
+    for (auto& val : myvector) {
+        std::cout << ' ' << val;
+    }
 }
